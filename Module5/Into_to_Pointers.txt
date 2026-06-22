@@ -1,0 +1,40 @@
+Pointers in GO:
+*Pointer is a variable that holds memory address of another variable.
+
+*Why Pointers considered special variables? :
+Because they dont only hold memory addresses but they also point 
+where this memory is located and provide ways to find or even 
+change the value that's located at that memory location.
+
+*2 most used operators with pointers: address & dereference operators,
+1.address operator/gives address of operator --> "&" //ampersand 
+2.dereference operator--> "*", when placed before an address, it returns the value at that address.
+
+Example: 
+x:=20 then &x gives address of x and 
+doing *x, meaning trying to dereference the adress, will give us the value of x i.e., 20
+
+> Syntax to declare a pointer:
+var <pointer_name> *<data_type>
+Example: var ptr_i *int  <--- here we created a pointer ptr_i
+Example: code2.go
+
+
+> Syntax to declare and initialize a pointer:
+var <pointer_name> *<data type> = &<variable_name>
+//RMBR: "&+variable name gives us the address of that particular variable."
+Example:
+i:=20
+var ptr_i *int =&i <-- Here on LHS we have *int since 10 = int type.
+
+=> There is another way to initialize a pointer: 
+var<pointer_name> =&<variable_name>
+Example: 
+s:="fine"
+var ptr_s=&s <-- "&s" stores the address of s
+
+=> Next apporach is using, short-hand annotation:
+<pointer_name> :=&<variable_name> //Note that in this case we skip using var keyword.
+Example:
+s:="former"
+ptr_s:=&s
