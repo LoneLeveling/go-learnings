@@ -3,3 +3,18 @@ struct:
 - a structure that groups together data elements
 - provides a way to reference a series of grouped values through a single variable name.
 - Used when it makes sense to group or associate two or more data variables.
+
+
+Note: Zero value initialization by go (default):
+int       -> 0
+float64   -> 0
+string    -> ""
+bool      -> false
+pointer   -> nil
+slice     -> nil
+map       -> nil
+
+
+Note: %v Vs %+v
+// %v  -> prints a value in its default format.
+// %+v -> for structs, prints field names along with their values.
