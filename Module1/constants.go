@@ -7,5 +7,4 @@ func main(){
 	fmt.Printf("%v: %T\n",name,name)
 	fmt.Printf("%v: %T\n",is_muggle, is_muggle)
 	fmt.Printf("%v: %T\n",age,age)
-	
 }
