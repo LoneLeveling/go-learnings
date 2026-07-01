@@ -1,0 +1,45 @@
+*goroutine are a lightweight application-level thread that has a separate independent execution.
+*The main function in the main package is the main go-routine.
+All goroutines are started from the main goroutine, these goroutines can then 
+start multiple other goroutines, and so on.
+But the main goroutine represents the main program, once it exits then it means that the entire program has exited.
+
+* goroutines do not have parents or children,
+- when you start a goroutine, it just executes alongside all other goroutines.
+- Each goroutine exits only when its function returns,
+The only exception to that is that:
+"All goroutines exit when the main goroutine, the one that runs function main, exits."
+See code3.go to understand the same.
+
+--------------------------------------------------------------------------------------------------------
+Go schedular:
+- golang schedular is a cooperative schedular, meaning non-preemptive, that there is no time-based preemption that is happening from the OS, 
+So its a style of scheduling in which the OS never interrupts a running process to initiate a context switch from one process to another.
+In fact the processes must voluntarily yield control periodically or when logically blocked on a resource.
+There are some specific checkpoints where goroutines can yield its execution to other go-routine, these are called context switches.
+For example, the runtime calls the scheduler on function calls to decide whether a new goroutine needs to be scheduled.
+So basiclly, when a goroutine makes any function call, in that case the schedular will be called and a context switch might happen, meaning a new goroutine might be scheduled and its also 
+possible that the existing goroutine continues its execution and no context switching happens.
+
+Some example of context switching are:
+-function calls, 
+-garbage collection, 
+-network calls, 
+-channel operations,
+-on using go keyword.
+Now its just that the schedular gets the oppurtunity over here, it is upto the schedular whether to do a context switch or not.
+
+------------------------------------------------------------------------------------------------------------
+Difference between goroutine and threads:
+-goroutines are cheaper when compared to threads, they are only a few KBs in size and the stack can grow and shrink according to the needs of the application,
+Whereas for a thread, the stack size has to be specified and is fixed and Operating system threads generally start with 1 MB of stack space, 
+Since goroutines are cheap, you can launch hundread and thousands of goroutines while you can only launch a few thousand threads.
+
+-** goroutines are multiplexed to a fewer number of OS threads, there might be only one thread in a program with thousands of goroutines.
+
+-** The scheduling of goroutines is done by go runtime 
+Whereas in case of Threads the scheduling of threds is done by the OS(Operating system) runtime, and therefore the context switching time of go-routines is much faster
+than the context switching time of threads.
+
+- goroutines communicate using channels, channels by design prevent race conditions from happening when accessing share memory using goroutines, 
+channels can be thought of as a pipe using which goroutines communicate. 
