@@ -10,7 +10,6 @@ But the main goroutine represents the main program, once it exits then it means 
 The only exception to that is that:
 "All goroutines exit when the main goroutine, the one that runs function main, exits."
 See code3.go to understand the same.
-
 --------------------------------------------------------------------------------------------------------
 Go schedular:
 - golang schedular is a cooperative schedular, meaning non-preemptive, that there is no time-based preemption that is happening from the OS, 
@@ -38,8 +37,34 @@ Since goroutines are cheap, you can launch hundread and thousands of goroutines 
 -** goroutines are multiplexed to a fewer number of OS threads, there might be only one thread in a program with thousands of goroutines.
 
 -** The scheduling of goroutines is done by go runtime 
-Whereas in case of Threads the scheduling of threds is done by the OS(Operating system) runtime, and therefore the context switching time of go-routines is much faster
+Whereas in case of Threads the scheduling of threads is done by the OS(Operating system) runtime, and therefore the context switching time of go-routines is much faster
 than the context switching time of threads.
 
 - goroutines communicate using channels, channels by design prevent race conditions from happening when accessing share memory using goroutines, 
 channels can be thought of as a pipe using which goroutines communicate. 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+wait groups:
+*The problem with go-routines was the main go-routine terminating before the 
+go-routine completed or even began their execution.
+*To wait for multiple go-rotuines to finish, we can use a wait group.
+*A wait group is a synchronization primitive that allows go-routines to wait for each other.                     
+*This package acts like a counter that blocks execution in a structured way until its internal counter becomes 0.
+*wait group syntax: var <variable-name> sync.WaitGroup <--- this "sync.WaitGroup" is the datatype.
+*import package "sync" to use this.
+ 
+***wait groups have 3 vvimp methods :
+No.1: wg.Add(int) //this indicates the no. of go routines to wait for, the int in the func acts like a counter. 
+No.2: wg.Wait() //This method blocks the execution of code until the internal counter reduces to value=0.
+No.3: wg.Done() //This method decreases the internal count parameter in Add() method by 1.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Channels:
+
+* Channels are a means through which different go-routines communicates.
+* Unbuffered channel: A channel that needs a receiver as soon as a message is emitted to the channel & Unbuffered channel does not hold any data.
+* Buffered channel : Have capacity to hold data, On a buffered channel sending to a channel, blocks the go-routine, only if the buffer is full.
+  - Receiving from a channel blocks only when the channel is empty.
+
+  syntax of buffer channel: c:=make(chan <data_type>, capacity)
+  example: c:=make(chan int, 10)  <-- this channel is meant to send and receive  integer data only and has a buffer of 10 values. 
