@@ -67,4 +67,102 @@ Channels:
   - Receiving from a channel blocks only when the channel is empty.
 
   syntax of buffer channel: c:=make(chan <data_type>, capacity)
-  example: c:=make(chan int, 10)  <-- this channel is meant to send and receive  integer data only and has a buffer of 10 values. 
+  example: c:=make(chan int, 5)  <-- this channel is meant to send and receive  integer data only and has a buffer of 10 values. 
+The second argument (5) is the capacity of the channel. That means the channel can hold up to 5 integers without requiring a receiver.
+The sender is allowed to keep sending until the buffer is full. Say you only inserted 2 values into a buffer of size 5, no blocking occurs And the moment you exceed buffer/capacity a deadlock will occur.
+  
+<------More on Buffered Vs Unbuffered Channels:------>
+Unbuffered channel (make(chan int))
+
+An unbuffered channel has capacity 0.
+
+Every send (ch <- value) must have a corresponding receiver ready.
+The sender and receiver synchronize at the same instant (this is called a rendezvous).
+ch := make(chan int)
+
+go func() {
+    fmt.Println(<-ch)
+}()
+
+ch <- 100 // Works because receiver is waiting
+
+Without a receiver:
+
+ch := make(chan int)
+ch <- 100 // Deadlock
+
+because there's nowhere for the value to be stored.
+
+Buffered channel (make(chan int, 5))
+
+A buffered channel has storage for 5 values.
+
+ch := make(chan int, 5)
+
+ch <- 1
+ch <- 2
+ch <- 3
+
+These sends succeed even though no receiver exists yet.
+
+However, once the buffer is full:
+
+ch := make(chan int, 2)
+
+ch <- 1
+ch <- 2
+ch <- 3 // Blocks here until someone receives
+
+The third send blocks because the buffer has no free space.
+
+So a receiver is eventually needed if you want to keep sending or if you want to consume the values. It's just not needed immediately.
+
+An easy analogy
+
+Think of a mailbox.
+
+Buffered channel
+Capacity = 3
+
+Mailbox:
++----+----+----+
+|100 |200 |300 |
++----+----+----+
+
+The sender can keep dropping letters into the mailbox until it's full.
+
+If the mailbox is full, the sender must wait until someone removes a letter.
+
+Unbuffered channel
+
+There is no mailbox.
+
+The sender must hand the letter directly to the receiver.
+
+If nobody is there to take it, the sender waits forever.
+
+Your statement, refined
+
+For a buffered channel, we may not need a receiver immediately because values can be stored in the buffer. But once the buffer becomes full, any further send blocks until a receiver reads from the channel. For an unbuffered channel, every send requires a receiver to be ready at the same time; otherwise the program blocks and can deadlock.
+
+<------------------------------------------------------------------------------------>
+
+  -------------------
+  Closing a channel:
+  *we use inbuilt close() function for closing a channel.
+  ------------------
+  Panic Situtation: These are basically exceptions that occurs at runtime.
+  - Panic occurs when:
+  1. Trying to send data to an already closed channel, 
+  2. Trying to close an already closed channel.
+  So make sure you close a channel only when you are sure no more data has to be sent to the channel.
+  ----------------------------
+  Using "for" range for Receiving values from a channel:
+  so we can use the range with for to iterate over the data sent or received from a channel.
+  Example:
+  	nums:=[5]int{1,2,3,4,5}
+	for i,item:=range nums{
+		fmt.Println(i, item)
+	}
+
+  **Rmbr: the for range is never going to finish until the channel is closed and it creates a deadlock situation as shown in code9.go
