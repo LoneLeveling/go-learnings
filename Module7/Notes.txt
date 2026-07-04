@@ -166,3 +166,34 @@ For a buffered channel, we may not need a receiver immediately because values ca
 	}
 
   **Rmbr: the for range is never going to finish until the channel is closed and it creates a deadlock situation as shown in code9.go
+
+  +++++++++++++++++++++++++++++++++++++++++++
+  Select(Blocking) Vs Switch(non-blocking)
+- select is like switch for channels, 
+as select is used with channels it can block and channels can blcock or receive operations.
+*Default block makes the select non-blocking as the default case will be executed if all the other cases are blocked.
+
+**Switch is deterministic and will run in sequence to select the matching case whereas select is non-deterministic as it will execute a case at random with no sequence.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Concurrency practices Cleaning up Go routines:
+* whenever you launch a go-routine function, you must make sure that it will eventually exit.
+* A go-routine that would never terminate , forever occupies the memory it has reserved. This kind of memory leak is called go-routine leak.
+*go routines leak if they end up either blocked forever on I/O like channel communication or fall into infinite loops.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++
+* A closure is a function which is defined inside another function.
+
+++++++++++++++++++++++++++++++++++++++++++++
+When to use buffered channel ?
+Buffered channel are useful when you know how many go-routines you have launched, want to limit the number of 
+go-routines you will launch, or want to limit the amount of work that is queued up.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+Time out code:
+One of the very famous Concurrency practices is to use "time-out-code"
+* Most interactive programs must return a response within a certain amount of time.
+And one of the thing that we can do with Concurrency in golang is to manage how much time a request or a part of a request has to run, so
+Blocking timeout in select statement can be achieved by using After function of time package.
+Signature of function: func After(d Duration) <- chan Time 
+* The After function waits for Duration d to finish and then it returns the current time on a channel.
